@@ -1,11 +1,14 @@
 import express, { Express } from "express";
 import mongoose from "mongoose";
 import router from "./routes/get";
+import cors from "cors";
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
-const mongoUrl = "mongodb://localhost:27017/test3";
+const mongoUrl = "mongodb://localhost:27017/playpal";
 
+
+app.use(cors())
 
 mongoose
   .connect(mongoUrl)
@@ -15,7 +18,7 @@ mongoose
       console.log(`[server]: Server is running at http://localhost:${port}`);
     });
   })
-  .catch((error) => {
+  .catch((error: Error) => {
     console.log("[server]: Error connecting to the database", error);
   });
 
