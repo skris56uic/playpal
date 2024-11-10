@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import { LocationAPIResponse, VenueDetails } from "./interfaces";
-import { TimeSlot, Venue, VenueModel } from "../models/venue";
+import { Venue, VenueModel } from "../models/venue";
 import { generateTimeSlots } from "../utils/getTimeSlots";
 
 const router: Router = express.Router();
