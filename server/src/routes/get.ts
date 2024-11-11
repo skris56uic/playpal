@@ -2,6 +2,8 @@ import express, { Router } from "express";
 import { LocationAPIResponse, VenueDetails } from "./interfaces";
 import { PlaceLocation, PlaceLocationModel, Venue } from "../models/venue";
 import { generateTimeSlots } from "../utils/getTimeSlots";
+import { getRandomAmenities } from "../utils/amenities";
+import { getRandomContactInformation } from "../utils/contactInfo";
 
 const router: Router = express.Router();
 
@@ -23,8 +25,10 @@ router.get("/venues", async (req, res) => {
     );
     if (locationPresent !== -1) {
       res.send(placeLocations[locationPresent]);
+      console.log("Location found in DB");
       return;
     }
+    console.log("Location not found in DB");
   }
 
   const overpassQuery = `[out:json][timeout:180];(nwr(around:${radius},${userLatitude},${userLongitude})["leisure"="pitch"]["sport"="baseball"];);
@@ -93,9 +97,10 @@ router.get("/venues", async (req, res) => {
           id: `${x.id}`,
           name: x.name,
           location: `${x.address_housenumber} ${x.address_street}, ${x.address_city}, ${x.address_state}, ${x.address_postcode}`,
-          amenities: ["Toilets", "Parking", "Food & Drink"],
+          amenities: getRandomAmenities(),
           facilities: "Baseball",
           availableSlots: generateTimeSlots(),
+          contactInfo: getRandomContactInformation(),
         })),
     };
 

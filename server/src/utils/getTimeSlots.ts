@@ -1,7 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import { TimeSlot, AvailableSlots } from "../models/venue";
 
+export const getRandomPrice = (): number => {
+  return Math.floor(Math.random() * 50) + 10; // Random price between 10 and 59
+};
+
 export const generateTimeSlots = (): AvailableSlots[] => {
+  const mockPrice = getRandomPrice()
   const availableSlots: AvailableSlots[] = [];
   const today = new Date();
   const tomorrow = new Date(today);
@@ -19,7 +24,7 @@ export const generateTimeSlots = (): AvailableSlots[] => {
         id: uuidv4(),
         startTime,
         endTime,
-        price: 10, // Example price
+        price: mockPrice, // Example price
         isBooked: false,
       });
     }

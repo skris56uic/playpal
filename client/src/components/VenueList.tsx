@@ -45,7 +45,7 @@ export function VenueList() {
   }, [location]);
 
   if (loading) {
-    return <Spinner />;
+    return <Spinner message="Loading Venues. Initially it might take upto 2 minutes. Please bear with us" />;
   }
 
   return (
