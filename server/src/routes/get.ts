@@ -1,21 +1,31 @@
 import express, { Router } from "express";
 import { LocationAPIResponse, VenueDetails } from "./interfaces";
-import { Venue, VenueModel } from "../models/venue";
+import { PlaceLocation, PlaceLocationModel, Venue } from "../models/venue";
 import { generateTimeSlots } from "../utils/getTimeSlots";
 
 const router: Router = express.Router();
 
 router.get("/venues", async (req, res) => {
-  const venues = await VenueModel.find();
-  if (venues.length > 0) {
-    res.send(venues);
+  const overpassUrl = "http://overpass-api.de/api/interpreter";
+  const userLatitude = +(req.query.latitude || 0);
+  const userLongitude = +(req.query.longitude || 0);
+  const radius = +(req.query.radius || 0);
+
+  if (userLatitude === 0 || userLongitude === 0 || radius === 0) {
+    res.status(400).send("Missing required parameters");
     return;
   }
 
-  const overpassUrl = "http://overpass-api.de/api/interpreter";
-  const userLatitude = req.query.latitude;
-  const userLongitude = req.query.longitude;
-  const radius = req.query.radius;
+  const placeLocations: PlaceLocation[] = await PlaceLocationModel.find({});
+  if (placeLocations.length > 0) {
+    const locationPresent = placeLocations.findIndex(
+      (pl) => pl.latitude === userLatitude && pl.longitude === userLongitude
+    );
+    if (locationPresent !== -1) {
+      res.send(placeLocations[locationPresent]);
+      return;
+    }
+  }
 
   const overpassQuery = `[out:json][timeout:180];(nwr(around:${radius},${userLatitude},${userLongitude})["leisure"="pitch"]["sport"="baseball"];);
   out geom;
@@ -67,27 +77,31 @@ router.get("/venues", async (req, res) => {
         ) || [];
 
     const uniqueVenues = new Set<string>();
-    const formattedVenue: Venue[] = formattedResponse
-      .filter((x) => {
-        if (uniqueVenues.has(`${x.id}`)) {
-          return false;
-        } else {
-          uniqueVenues.add(`${x.id}`);
-          return true;
-        }
-      })
-      .map((x) => ({
-        id: `${x.id}`,
-        name: x.name,
-        location: `${x.address_housenumber} ${x.address_street}, ${x.address_city}, ${x.address_state}, ${x.address_postcode}`,
-        amenities: ["Toilets", "Parking", "Food & Drink"],
-        facilities: "Baseball",
-        availableSlots: generateTimeSlots(),
-      }));
+    const formattedLocation: PlaceLocation = {
+      latitude: userLatitude,
+      longitude: userLongitude,
+      venues: formattedResponse
+        .filter((x) => {
+          if (uniqueVenues.has(`${x.id}`)) {
+            return false;
+          } else {
+            uniqueVenues.add(`${x.id}`);
+            return true;
+          }
+        })
+        .map((x) => ({
+          id: `${x.id}`,
+          name: x.name,
+          location: `${x.address_housenumber} ${x.address_street}, ${x.address_city}, ${x.address_state}, ${x.address_postcode}`,
+          amenities: ["Toilets", "Parking", "Food & Drink"],
+          facilities: "Baseball",
+          availableSlots: generateTimeSlots(),
+        })),
+    };
 
-    await VenueModel.insertMany(formattedVenue);
+    await PlaceLocationModel.insertMany(formattedLocation);
 
-    res.send(formattedVenue);
+    res.send(formattedLocation);
 
     // Return the data from the Overpass API
   } catch (error) {
@@ -100,12 +114,20 @@ router.get("/venue/:id", async (req, res) => {
   const venueId = req.params.id;
 
   try {
-    const venue = await VenueModel.findOne({
-      id: venueId,
+    const placeLocation = await PlaceLocationModel.findOne({
+      "venues.id": venueId,
     });
 
+    if (!placeLocation) {
+      res.status(404).send({ error: "Venue not found" });
+      return;
+    }
+
+    const venue = placeLocation.venues.find((v) => v.id === venueId);
+
     if (!venue) {
-      res.send({ error: "Venue not found" });
+      res.status(404).send({ error: "Venue not found" });
+      return;
     }
 
     res.send(venue);
@@ -117,27 +139,31 @@ router.get("/venue/:id", async (req, res) => {
 
 router.get("/my-bookings", async (req, res) => {
   try {
-    const venues: Venue[] = await VenueModel.find();
+    const placeLocations: PlaceLocation[] = await PlaceLocationModel.find();
 
-    if (!venues || venues.length === 0) {
+    if (!placeLocations || placeLocations.length === 0) {
       res.send({ error: "No venues found" });
       return;
     }
 
-    const filteredVenues = [];
-    venues.forEach((venue) => {
-      venue.availableSlots.forEach((slot, i) => {
-        venue.availableSlots[i].timeSlots = slot.timeSlots.filter(
-          (ts) => ts.isBooked
+    const filteredVenues: Venue[] = [];
+    placeLocations.forEach((placeLocation) => {
+      placeLocation.venues.forEach((venue) => {
+        venue.availableSlots.forEach((slot, i) => {
+          venue.availableSlots[i].timeSlots = slot.timeSlots.filter(
+            (ts) => ts.isBooked
+          );
+        });
+
+        venue.availableSlots = venue.availableSlots.filter(
+          (as) => as.timeSlots.length > 0
         );
       });
 
-      venue.availableSlots = venue.availableSlots.filter(
-        (as) => as.timeSlots.length > 0
+      filteredVenues.push(
+        ...placeLocation.venues.filter((v) => v.availableSlots.length > 0)
       );
     });
-
-    filteredVenues.push(...venues.filter((v) => v.availableSlots.length > 0));
 
     res.send(filteredVenues);
   } catch (error) {
@@ -156,20 +182,24 @@ router.get("/book-slot", async (req, res) => {
   }
 
   try {
-    const venue = await VenueModel.findOne({
-      "availableSlots.timeSlots.id": slotId,
+    const placeLocation = await PlaceLocationModel.findOne({
+      "venues.availableSlots.timeSlots.id": slotId,
     });
-    if (!venue) {
+
+    if (!placeLocation) {
       res.status(404).send("Timeslot not found");
       return;
     }
+
     let slotFound = false;
-    venue.availableSlots.forEach((availableSlot) => {
-      availableSlot.timeSlots.forEach((timeSlot) => {
-        if (timeSlot.id === slotId) {
-          timeSlot.isBooked = book === "true";
-          slotFound = true;
-        }
+    placeLocation.venues.forEach((venue) => {
+      venue.availableSlots.forEach((availableSlot) => {
+        availableSlot.timeSlots.forEach((timeSlot) => {
+          if (timeSlot.id === slotId) {
+            timeSlot.isBooked = book === "true";
+            slotFound = true;
+          }
+        });
       });
     });
 
@@ -178,7 +208,7 @@ router.get("/book-slot", async (req, res) => {
       return;
     }
 
-    await venue.save();
+    await placeLocation.save();
     res.send({ message: book === "true" ? "Slot booked" : "Slot unbooked" });
   } catch (error) {
     console.error("Error booking timeslot:", error);

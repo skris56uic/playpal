@@ -22,6 +22,12 @@ interface Venue {
   availableSlots: AvailableSlots[];
 }
 
+interface PlaceLocation {
+  latitude: number;
+  longitude: number;
+  venues: Venue[];
+}
+
 const timeSlotSchema = new mongoose.Schema<TimeSlot>({
   id: { type: String, required: true },
   startTime: { type: String, required: true },
@@ -44,6 +50,22 @@ const venueSchema = new mongoose.Schema<Venue>({
   availableSlots: { type: [availableSlotsSchema], required: true },
 });
 
-const VenueModel = mongoose.model<Venue>("Venue", venueSchema);
+const placeLocationSchema = new mongoose.Schema({
+  latitude: { type: Number, required: true },
+  longitude: { type: Number, required: true },
+  venues: { type: [venueSchema], required: true },
+});
 
-export { VenueModel, Venue, TimeSlot, AvailableSlots };
+const PlaceLocationModel = mongoose.model<PlaceLocation>(
+  "PlaceLocation",
+  placeLocationSchema
+);
+
+export {
+  PlaceLocationModel,
+  Venue,
+  TimeSlot,
+  AvailableSlots,
+  placeLocationSchema,
+  PlaceLocation,
+};
