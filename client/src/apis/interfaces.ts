@@ -26,28 +26,6 @@ export interface LocationDetails {
 	radius: number;
 }
 
-// export type Data = Country[];
-
-// export interface Country {
-// 	name: string;
-// 	latitude: string;
-// 	longitude: string;
-// 	states: State[];
-// }
-
-// export interface State {
-// 	name: string;
-// 	latitude: string;
-// 	longitude: string;
-// 	cities: City[];
-// }
-
-// export interface City {
-// 	name: string;
-// 	latitude: string;
-// 	longitude: string;
-// }
-
 export interface Country {
 	name: string;
 	states: State[];

@@ -1,4 +1,4 @@
-import { Venue, LocationDetails } from "./interfaces";
+import { Venue, LocationDetails, PlaceLocation } from "./interfaces";
 
 export async function getVenueList(
   location: LocationDetails
@@ -7,9 +7,9 @@ export async function getVenueList(
   const request: Request = new Request(url);
   try {
     const response = await fetch(request);
-    const data: Venue[] = await response.json();
+    const data: PlaceLocation = await response.json();
     console.log("Data fetched from the server:", data);
-    return new Promise((res, _) => res(data));
+    return new Promise((res, _) => res(data.venues));
   } catch (error) {
     console.error("Error fetching data from Overpass API:", error);
     return new Promise((_, rej) =>

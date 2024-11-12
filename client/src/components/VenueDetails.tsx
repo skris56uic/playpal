@@ -12,6 +12,7 @@ import {
   InputLabel,
   Button,
   SelectChangeEvent,
+  Link,
 } from "@mui/material";
 import { getVenueDetails, updateBooking } from "../apis";
 import { TimeSlot, Venue } from "../apis/interfaces";
@@ -125,13 +126,30 @@ const VenueDetails: React.FC = () => {
             {venue.name}
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Location: {venue.location}
+            Location:{" "}
+            <Link
+              href={`https://www.google.com/maps/search/${encodeURIComponent(
+                venue.location
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {venue.location}
+            </Link>
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Contact Information: {venue.contactInfo.name},{" "}
+            {venue.contactInfo.phoneNumber}
           </Typography>
           <Typography variant="body1" color="text.secondary">
             Facilities: {venue.facilities}
           </Typography>
           <Typography variant="body1" color="text.secondary">
             Amenities: {venue.amenities.join(", ")}
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Price:{" "}
+            <strong>${venue.availableSlots[0].timeSlots[0].price}</strong>
           </Typography>
 
           <FormControl fullWidth sx={{ mt: 3 }}>

@@ -13,6 +13,11 @@ interface AvailableSlots {
   timeSlots: TimeSlot[];
 }
 
+interface ContactInformation {
+  name: string;
+  phoneNumber: string;
+}
+
 interface Venue {
   id: string;
   name: string;
@@ -20,6 +25,13 @@ interface Venue {
   facilities: string;
   amenities: string[];
   availableSlots: AvailableSlots[];
+  contactInfo: ContactInformation;
+}
+
+interface PlaceLocation {
+  latitude: number;
+  longitude: number;
+  venues: Venue[];
 }
 
 const timeSlotSchema = new mongoose.Schema<TimeSlot>({
@@ -35,6 +47,11 @@ const availableSlotsSchema = new mongoose.Schema<AvailableSlots>({
   timeSlots: { type: [timeSlotSchema], required: true },
 });
 
+const contactInformationSchema = new mongoose.Schema<ContactInformation>({
+  name: { type: String, required: true },
+  phoneNumber: { type: String, required: true },
+});
+
 const venueSchema = new mongoose.Schema<Venue>({
   id: { type: String, required: true },
   name: { type: String, required: true },
@@ -42,8 +59,26 @@ const venueSchema = new mongoose.Schema<Venue>({
   facilities: { type: String, required: true },
   amenities: { type: [String], required: true },
   availableSlots: { type: [availableSlotsSchema], required: true },
+  contactInfo: { type: contactInformationSchema, required: true },
 });
 
-const VenueModel = mongoose.model<Venue>("Venue", venueSchema);
+const placeLocationSchema = new mongoose.Schema({
+  latitude: { type: Number, required: true },
+  longitude: { type: Number, required: true },
+  venues: { type: [venueSchema], required: true },
+});
 
-export { VenueModel, Venue, TimeSlot, AvailableSlots };
+const PlaceLocationModel = mongoose.model<PlaceLocation>(
+  "PlaceLocation",
+  placeLocationSchema
+);
+
+export {
+  PlaceLocationModel,
+  Venue,
+  TimeSlot,
+  AvailableSlots,
+  placeLocationSchema,
+  PlaceLocation,
+  ContactInformation,
+};
