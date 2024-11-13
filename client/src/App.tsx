@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { VenueList } from "./components/VenueList";
 import VenueDetails from "./components/VenueDetails";
 import MyBookings from "./components/MyBookings";
@@ -13,7 +8,7 @@ import { Box } from "@mui/material";
 
 const App: React.FC = () => {
   return (
-    <Router>
+    <BrowserRouter>
       <Header />
       <Box sx={{ mt: 8 }}>
         <Routes>
@@ -24,7 +19,7 @@ const App: React.FC = () => {
           <Route path="*" element={<Navigate to="/venues" />} />
         </Routes>
       </Box>
-    </Router>
+    </BrowserRouter>
   );
 };
 
