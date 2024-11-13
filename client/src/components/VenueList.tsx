@@ -20,7 +20,7 @@ import {
   Box,
 } from "@mui/material";
 import Spinner from "./Spinner";
-import countriesJSON from "../../public/united_states.json";
+import countriesJSON from "../countries_data/united_states.json";
 
 export function VenueList() {
   const [venueList, setVenueList] = useState<Venue[]>([]);
