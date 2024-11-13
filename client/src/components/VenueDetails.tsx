@@ -118,7 +118,7 @@ const VenueDetails: React.FC = () => {
         <CardMedia
           component="img"
           height="300"
-          image="/assets/picture.jpg"
+          image="/picture.jpg"
           alt={venue.name}
         />
         <CardContent>
