@@ -35,5 +35,20 @@ export interface Venue {
 export interface LocationDetails {
   latitude: number;
   longitude: number;
-  radius: number;
+}
+
+export interface Country {
+  name: string;
+  states: State[];
+}
+
+export interface State {
+  name: string;
+  cities: City[];
+}
+
+export interface City {
+  name: string;
+  latitude: string;
+  longitude: string;
 }

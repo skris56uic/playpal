@@ -3,7 +3,7 @@ import { Venue, LocationDetails, PlaceLocation } from "./interfaces";
 export async function getVenueList(
   location: LocationDetails
 ): Promise<Venue[]> {
-  const url = `http://localhost:3000/venues?latitude=${location.latitude}&longitude=${location.longitude}&radius=${location.radius}`;
+  const url = `http://localhost:3000/venues?latitude=${location.latitude}&longitude=${location.longitude}`;
   const request: Request = new Request(url);
   try {
     const response = await fetch(request);

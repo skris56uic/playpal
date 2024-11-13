@@ -72,7 +72,6 @@ export interface VenueDetails {
   address_postcode: string;
   address_state: string;
   address_street: string;
-  wikiData: string;
   availableSlots: VenueAvailableSlots[];
 }
 
