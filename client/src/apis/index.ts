@@ -1,6 +1,6 @@
 import { Venue, LocationDetails, PlaceLocation } from "./interfaces";
 
-const baseUrl = "https://playpal-backend-q5wp.onrender.com";
+const baseUrl = "https://playpal-backend-0saw.onrender.com";
 
 export async function getVenueList(
   location: LocationDetails
