@@ -12,7 +12,7 @@ const mongoUrl =
 app.use(
   cors({
     // origin: "http://localhost:5173",
-    origin: "https://playpal-hzkz.onrender.com",
+    origin: "https://playpal-ydmy.onrender.com",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
