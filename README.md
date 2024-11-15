@@ -7,5 +7,3 @@ React
 Backend is built using:
 Node
 Express
-
-Currently in Progress
