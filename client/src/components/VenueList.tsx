@@ -85,30 +85,88 @@ export function VenueList() {
       }
     };
     fetchData();
-  }, [location]);
-
-  if (loading) {
-    return (
-      <Spinner message="Loading Venues. Initially it might take upto 2 minutes. Please bear with us" />
-    );
-  }
+  }, [location, selectedCity]);
 
   return (
-    <Stack
-      direction="column"
-      divider={<Divider orientation="vertical" flexItem />}
-      spacing={2}
-    >
-      {venueList.map((x, i) => (
-        <ActionAreaCard
-          key={i}
-          id={x.id}
-          name={x.name}
-          location={x.location}
-          amenities={x.amenities.join(", ")}
-          price={x.availableSlots[0].timeSlots[0].price}
-        />
-      ))}
+    <Stack spacing={2}>
+      <Typography variant="h6" align="center">
+        Select Country, State and City to Search for Venues
+      </Typography>
+      <Stack direction="row" spacing={2}>
+        <FormControl variant="outlined" fullWidth disabled={loading}>
+          <InputLabel>Country</InputLabel>
+          <Select
+            value={selectedCountry}
+            onChange={handleCountryChange}
+            label="Country"
+          >
+            {countriesJSON.map((country: Country) => (
+              <MenuItem key={country.name} value={country.name}>
+                {country.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl
+          variant="outlined"
+          fullWidth
+          disabled={!selectedCountry || loading}
+        >
+          <InputLabel>State</InputLabel>
+          <Select
+            value={selectedState}
+            onChange={handleStateChange}
+            label="State"
+          >
+            {states.map((state: State) => (
+              <MenuItem key={state.name} value={state.name}>
+                {state.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl
+          variant="outlined"
+          fullWidth
+          disabled={!selectedState || loading}
+        >
+          <InputLabel>City</InputLabel>
+          <Select value={selectedCity} onChange={handleCityChange} label="City">
+            {cities.map((city: City) => (
+              <MenuItem key={city.name} value={city.name}>
+                {city.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Stack>
+      {loading && selectedCity ? (
+        <Spinner message="Loading venues... Time to stretch your legs or do a little dance!" />
+      ) : selectedCity && venueList.length === 0 ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100vh"
+        >
+          <Typography variant="body1" align="center">
+            No venues available. Looks like the party moved elsewhere! Try
+            selecting another place.
+          </Typography>
+        </Box>
+      ) : (
+        venueList.map((x, i) => (
+          <ActionAreaCard
+            key={i}
+            id={x.id}
+            name={x.name}
+            location={x.location}
+            amenities={x.amenities.join(", ")}
+            price={x.availableSlots[0].timeSlots[0].price}
+          />
+        ))
+      )}
+      <Divider />
     </Stack>
   );
 }
