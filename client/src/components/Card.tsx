@@ -33,7 +33,7 @@ export default function ActionAreaCard({
         <CardMedia
           component="img"
           height="140"
-          image="/assets/picture.jpg"
+          image="/picture.jpg"
           alt="green iguana"
         />
         <CardContent>

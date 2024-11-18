@@ -11,9 +11,8 @@ router.get("/venues", async (req, res) => {
 	const overpassUrl = "http://overpass-api.de/api/interpreter";
 	const userLatitude = +(req.query.latitude || 0);
 	const userLongitude = +(req.query.longitude || 0);
-	const radius = +(req.query.radius || 0);
 
-	if (userLatitude === 0 || userLongitude === 0 || radius === 0) {
+	if (userLatitude === 0 || userLongitude === 0) {
 		res.status(400).send("Missing required parameters");
 		return;
 	}
@@ -35,10 +34,11 @@ router.get("/venues", async (req, res) => {
 	const overpassQuery = `
     [out:json][timeout:180];
     nwr(around:100000,${userLatitude},${userLongitude})["sport"~".*\\s*base\\s*ball\\s*.*",i]["name"]["addr:city"]["addr:housenumber"]["addr:postcode"]["addr:state"]["addr:street"];
-    out center tags;
-  `;
+    out center tags;`;
 
 	try {
+		// Send the query to the Overpass API
+
 		const request = new Request(overpassUrl, {
 			method: "POST",
 			body: overpassQuery,

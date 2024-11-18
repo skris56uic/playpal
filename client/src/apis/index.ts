@@ -1,9 +1,11 @@
 import { Venue, LocationDetails, PlaceLocation } from "./interfaces";
 
+const baseUrl = "https://playpal-backend-0saw.onrender.com";
+
 export async function getVenueList(
   location: LocationDetails
 ): Promise<Venue[]> {
-  const url = `http://localhost:3000/venues?latitude=${location.latitude}&longitude=${location.longitude}&radius=${location.radius}`;
+  const url = `${baseUrl}/venues?latitude=${location.latitude}&longitude=${location.longitude}`;
   const request: Request = new Request(url);
   try {
     const response = await fetch(request);
@@ -19,7 +21,7 @@ export async function getVenueList(
 }
 
 export async function getVenueDetails(id: string): Promise<Venue> {
-  const url = `http://localhost:3000/venue/${id}`;
+  const url = `${baseUrl}/venue/${id}`;
   const request: Request = new Request(url);
   try {
     const response = await fetch(request);
@@ -35,7 +37,7 @@ export async function getVenueDetails(id: string): Promise<Venue> {
 }
 
 export async function getBookedVenues(): Promise<Venue[]> {
-  const url = `http://localhost:3000/my-bookings`;
+  const url = `${baseUrl}/my-bookings`;
   const request: Request = new Request(url);
   try {
     const response = await fetch(request);
@@ -54,7 +56,7 @@ export async function updateBooking(
   slotId: string,
   book: boolean
 ): Promise<void> {
-  const url = `http://localhost:3000/book-slot?slotId=${slotId}&book=${book}`;
+  const url = `${baseUrl}/book-slot?slotId=${slotId}&book=${book}`;
   const request: Request = new Request(url);
   try {
     const response = await fetch(request);
