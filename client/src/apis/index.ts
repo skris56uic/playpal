@@ -1,3 +1,4 @@
+import { User } from "../UserContext";
 import { Venue, LocationDetails, PlaceLocation } from "./interfaces";
 
 // const baseUrl = "https://playpal-backend-0saw.onrender.com";
@@ -67,5 +68,93 @@ export async function updateBooking(
   } catch (error) {
     console.error("Error updating booking:", error);
     throw error;
+  }
+}
+
+export async function registerUser(
+  name: string,
+  email: string,
+  password: string
+): Promise<void> {
+  const url = `${baseUrl}/register`;
+  const requestOptions: RequestInit = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name, email, password }),
+  };
+
+  try {
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+
+    if (response.ok) {
+      return Promise.resolve();
+    } else {
+      return Promise.reject(new Error(data.message || "Registration failed!"));
+    }
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(
+      new Error("An error occurred. Please try again later.")
+    );
+  }
+}
+
+export async function loginUser(
+  email: string,
+  password: string
+): Promise<User> {
+  const url = `${baseUrl}/login`;
+
+  const requestOptions: RequestInit = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({ email, password }),
+  };
+
+  try {
+    const response = await fetch(url, requestOptions);
+    const userDocument = await response.json();
+
+    if (response.ok) {
+      return userDocument;
+    } else {
+      throw new Error(userDocument.message || "Login failed!");
+    }
+  } catch (error) {
+    console.error("Error logging in:", error);
+    throw new Error("An error occurred. Please try again later.");
+  }
+}
+
+export async function logoutUser(): Promise<void> {
+  const url = `${baseUrl}/logout`;
+
+  const requestOptions: RequestInit = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  };
+
+  try {
+    const response = await fetch(url, requestOptions);
+
+    if (response.ok) {
+      return Promise.resolve();
+    } else {
+      return Promise.reject(new Error("Logout failed!"));
+    }
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(
+      new Error("An error occurred. Please try again later.")
+    );
   }
 }

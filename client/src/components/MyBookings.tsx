@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Venue } from "../apis/interfaces";
 import { getBookedVenues, updateBooking } from "../apis";
 import { Box, Button, Typography } from "@mui/material";
 import Spinner from "./Spinner";
 import BookingSnackbar from "./BookingSnackBar";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../UserContext";
 
 const MyBookings: React.FC = () => {
   const [bookedVenues, setBookedVenues] = useState<Venue[]>([]);
@@ -12,6 +13,7 @@ const MyBookings: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const fetchBookedVenues = async () => {
@@ -27,6 +29,12 @@ const MyBookings: React.FC = () => {
     };
     fetchBookedVenues();
   }, [navigate]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user]);
 
   const handleCancelBooking = async (slotId: string) => {
     try {
@@ -62,7 +70,17 @@ const MyBookings: React.FC = () => {
   }
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2 }}>
+    <Box
+      sx={{
+        mt: 8,
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        p: 2,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       {bookedVenues.length === 0 ? (
         <Typography variant="h6" color="text.secondary">
           No Booking Present, kindly make a booking to be viewed here.
