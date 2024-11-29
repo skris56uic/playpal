@@ -9,8 +9,6 @@ import { userModel } from "../models/user";
 import { generateTimeSlots } from "../utils/getTimeSlots";
 import { getRandomAmenities } from "../utils/amenities";
 import { getRandomContactInformation } from "../utils/contactInfo";
-import { error } from "console";
-import e from "express";
 
 const router: Router = express.Router();
 
