@@ -40,7 +40,10 @@ export async function getVenueDetails(id: string): Promise<Venue> {
 
 export async function getBookedVenues(): Promise<Venue[]> {
   const url = `${baseUrl}/my-bookings`;
-  const request: Request = new Request(url);
+  const request: Request = new Request(url, {
+    method: "GET",
+    credentials: "include",
+  });
   try {
     const response = await fetch(request);
     const data: Venue[] = await response.json();
@@ -59,7 +62,10 @@ export async function updateBooking(
   book: boolean
 ): Promise<void> {
   const url = `${baseUrl}/book-slot?slotId=${slotId}&book=${book}`;
-  const request: Request = new Request(url);
+  const request: Request = new Request(url, {
+    method: "GET",
+    credentials: "include",
+  });
   try {
     const response = await fetch(request);
     if (!response.ok) {

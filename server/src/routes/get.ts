@@ -9,6 +9,8 @@ import { userModel } from "../models/user";
 import { generateTimeSlots } from "../utils/getTimeSlots";
 import { getRandomAmenities } from "../utils/amenities";
 import { getRandomContactInformation } from "../utils/contactInfo";
+import { error } from "console";
+import e from "express";
 
 const router: Router = express.Router();
 
@@ -140,6 +142,24 @@ router.get("/venue/:id", async (req, res) => {
 
 router.get("/my-bookings", async (req, res) => {
   try {
+    const cookies = req.cookies;
+    const token = cookies.token;
+
+    if (!token) {
+      res.status(401).send({ error: "Unauthorized" });
+      return;
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as jwt.JwtPayload;
+    const userId = decoded.id;
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      res.status(401).send({ error: "Unauthorized" });
+      return;
+    }
+
     const placeLocations: PlaceLocation[] = await PlaceLocationModel.find();
 
     if (!placeLocations || placeLocations.length === 0) {
@@ -152,7 +172,7 @@ router.get("/my-bookings", async (req, res) => {
       placeLocation.venues.forEach((venue) => {
         venue.availableSlots.forEach((slot, i) => {
           venue.availableSlots[i].timeSlots = slot.timeSlots.filter(
-            (ts) => ts.isBooked
+            (ts) => ts.isBooked && user.bookedSlots.includes(ts.id)
           );
         });
 
@@ -174,8 +194,8 @@ router.get("/my-bookings", async (req, res) => {
 });
 
 router.get("/book-slot", async (req, res) => {
-  const slotId = req.query.slotId;
-  const book = req.query.book;
+  const slotId = req.query.slotId as string;
+  const book = req.query.book as string;
 
   if (!slotId) {
     res.status(400).send("Missing required parameters");
@@ -183,6 +203,23 @@ router.get("/book-slot", async (req, res) => {
   }
 
   try {
+    const cookie = req.cookies;
+    const token = cookie.token;
+    if (!token) {
+      res.status(401).send({ error: "Unauthorized" });
+      return;
+    }
+
+    const decoded = jwt.verify(token, jwtSecret);
+    const userId = (decoded as jwt.JwtPayload).id;
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      res.status(401).send({ error: "Unauthorized" });
+      return;
+    }
+
     const placeLocation = await PlaceLocationModel.findOne({
       "venues.availableSlots.timeSlots.id": slotId,
     });
@@ -209,6 +246,15 @@ router.get("/book-slot", async (req, res) => {
       return;
     }
 
+    if (book === "true") {
+      if (!user.bookedSlots.includes(slotId)) {
+        user.bookedSlots.push(slotId);
+      }
+    } else {
+      user.bookedSlots = user.bookedSlots.filter((slot) => slot !== slotId);
+    }
+
+    await user.save();
     await placeLocation.save();
     res.send({ message: book === "true" ? "Slot booked" : "Slot unbooked" });
   } catch (error) {
@@ -226,6 +272,7 @@ router.post("/register", async (req, res) => {
       name,
       email,
       password: bcrypt.hashSync(password, hashedPassword),
+      bookedSlots: [],
     });
 
     res.status(200).json(userDoc);
