@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../UserContext";
+import { UserContext } from "../components/UserContext";
 
 import { loginUser } from "../apis";
 

@@ -1,4 +1,4 @@
-import { User } from "../UserContext";
+import { User } from "../components/UserContext";
 import { Venue, LocationDetails, PlaceLocation } from "./interfaces";
 
 // const baseUrl = "https://playpal-backend-0saw.onrender.com";

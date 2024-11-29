@@ -2,8 +2,8 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { UserContext } from "../UserContext";
 import { logoutUser } from "../apis";
+import { UserContext } from "./UserContext";
 
 const Header: React.FC = () => {
   const { user } = useContext(UserContext);

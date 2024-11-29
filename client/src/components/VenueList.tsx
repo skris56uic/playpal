@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import Spinner from "./Spinner";
 import countriesJSON from "../countries_data/united_states.json";
-import { UserContext } from "../UserContext";
+import { UserContext } from "../components/UserContext";
 import { useNavigate } from "react-router-dom";
 
 export function VenueList() {
@@ -95,7 +95,7 @@ export function VenueList() {
     if (!user) {
       navigate("/login");
     }
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <Box sx={{ m: 5, mt: 8 }}>

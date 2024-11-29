@@ -18,7 +18,7 @@ import { getVenueDetails, updateBooking } from "../apis";
 import { TimeSlot, Venue } from "../apis/interfaces";
 import BookingSnackbar from "./BookingSnackBar";
 import Spinner from "./Spinner";
-import { UserContext } from "../UserContext";
+import { UserContext } from "./UserContext";
 
 const defaultSlot: TimeSlot = {
   id: "",
@@ -61,7 +61,7 @@ const VenueDetails: React.FC = () => {
     if (!user) {
       navigate("/login");
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const handleSlotChange = (event: SelectChangeEvent<string | number>) => {
     const slotId = event.target.value as string;

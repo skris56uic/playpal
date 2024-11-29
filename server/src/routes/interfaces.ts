@@ -101,5 +101,5 @@ export interface UserDataType {
   name: string;
   email: string;
   password: string;
-  iat: Number;
+  iat: number;
 }

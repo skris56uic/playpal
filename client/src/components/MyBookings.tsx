@@ -5,7 +5,7 @@ import { Box, Button, Typography } from "@mui/material";
 import Spinner from "./Spinner";
 import BookingSnackbar from "./BookingSnackBar";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../UserContext";
+import { UserContext } from "../components/UserContext";
 
 const MyBookings: React.FC = () => {
   const [bookedVenues, setBookedVenues] = useState<Venue[]>([]);
@@ -34,7 +34,7 @@ const MyBookings: React.FC = () => {
     if (!user) {
       navigate("/login");
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const handleCancelBooking = async (slotId: string) => {
     try {

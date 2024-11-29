@@ -1,9 +1,9 @@
 import express, { Router } from "express";
 import bcrypt from "bcryptjs";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 import { LocationAPIResponse, VenueDetails } from "./interfaces";
-import { RegisterRequest, LoginRequest, UserDataType } from "./interfaces";
+import { RegisterRequest, LoginRequest } from "./interfaces";
 import { PlaceLocation, PlaceLocationModel, Venue } from "../models/venue";
 import { userModel } from "../models/user";
 import { generateTimeSlots } from "../utils/getTimeSlots";
@@ -247,8 +247,6 @@ router.post("/login", async (req, res) => {
       );
 
       if (passwordCorrect) {
-        const options: jwt.SignOptions = {};
-
         jwt.sign(
           { email: userDoc.email, id: userDoc._id },
           jwtSecret,

@@ -5,7 +5,7 @@ import VenueDetails from "./components/VenueDetails";
 import MyBookings from "./components/MyBookings";
 import Header from "./components/Header";
 import Login from "./components/Login";
-import { UserContextProvider } from "./UserContext";
+import { UserContextProvider } from "./components/UserContextProvider";
 import Register from "./components/Register";
 
 const App: React.FC = () => {

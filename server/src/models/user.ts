@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 interface User {
-  _id: String;
-  name: String;
-  email: String;
-  password: String;
-  __v: Number;
+  _id: string;
+  name: string;
+  email: string;
+  password: string;
+  __v: number;
 }
 
 const userSchema = new mongoose.Schema<User>({
