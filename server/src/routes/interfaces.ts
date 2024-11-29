@@ -85,3 +85,21 @@ export interface LocationDetails {
   latitude: number;
   longitude: number;
 }
+
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface UserDataType {
+  name: string;
+  email: string;
+  password: string;
+  iat: Number;
+}

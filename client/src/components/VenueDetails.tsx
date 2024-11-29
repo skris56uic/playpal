@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Container,
@@ -18,6 +18,7 @@ import { getVenueDetails, updateBooking } from "../apis";
 import { TimeSlot, Venue } from "../apis/interfaces";
 import BookingSnackbar from "./BookingSnackBar";
 import Spinner from "./Spinner";
+import { UserContext } from "../UserContext";
 
 const defaultSlot: TimeSlot = {
   id: "",
@@ -36,6 +37,7 @@ const VenueDetails: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const fetchVenueDetails = async () => {
@@ -54,6 +56,12 @@ const VenueDetails: React.FC = () => {
 
     fetchVenueDetails();
   }, [id]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user]);
 
   const handleSlotChange = (event: SelectChangeEvent<string | number>) => {
     const slotId = event.target.value as string;

@@ -1,11 +1,18 @@
 import express, { Router } from "express";
+import bcrypt from "bcryptjs";
+import jwt, { JwtPayload } from "jsonwebtoken";
+
 import { LocationAPIResponse, VenueDetails } from "./interfaces";
+import { RegisterRequest, LoginRequest, UserDataType } from "./interfaces";
 import { PlaceLocation, PlaceLocationModel, Venue } from "../models/venue";
+import { userModel } from "../models/user";
 import { generateTimeSlots } from "../utils/getTimeSlots";
 import { getRandomAmenities } from "../utils/amenities";
 import { getRandomContactInformation } from "../utils/contactInfo";
 
 const router: Router = express.Router();
+
+const jwtSecret = "jhfasdf894u5y9ngmy6467h3b6m7n34d09vba09v8d0";
 
 router.get("/venues", async (req, res) => {
   const overpassUrl = "http://overpass-api.de/api/interpreter";
@@ -208,6 +215,68 @@ router.get("/book-slot", async (req, res) => {
     console.error("Error booking timeslot:", error);
     res.status(500).send("Error booking timeslot");
   }
+});
+
+router.post("/register", async (req, res) => {
+  try {
+    const { name, email, password }: RegisterRequest = req.body;
+    const bcryptSalt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, bcryptSalt);
+    const userDoc = await userModel.create({
+      name,
+      email,
+      password: bcrypt.hashSync(password, hashedPassword),
+    });
+
+    res.status(200).json(userDoc);
+  } catch (error) {
+    console.error("Error registering user:", error);
+    res.status(422).json({ error: "Error registering user" });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password }: LoginRequest = req.body;
+
+    const userDoc = await userModel.findOne({ email });
+    if (userDoc) {
+      const passwordCorrect = bcrypt.compareSync(
+        password,
+        `${userDoc.password}`
+      );
+
+      if (passwordCorrect) {
+        const options: jwt.SignOptions = {};
+
+        jwt.sign(
+          { email: userDoc.email, id: userDoc._id },
+          jwtSecret,
+          {},
+          (err, token) => {
+            if (err) {
+              throw err;
+            }
+            res.cookie("token", token).json(userDoc);
+          }
+        );
+      } else {
+        res.status(422).json("Wrong passowrd");
+      }
+    } else {
+      res.status(404).json("User not found");
+    }
+  } catch (error) {
+    console.error("Error logging in user:", error);
+    res.status(422).json({ error: "Error logging in user" });
+  }
+});
+
+router.post("/logout", (req, res) => {
+  res.clearCookie("token", {
+    path: "/",
+  });
+  res.json({ success: true });
 });
 
 export default router;

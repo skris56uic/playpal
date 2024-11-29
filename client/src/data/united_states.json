@@ -2389,6 +2389,12 @@
         ]
       },
       {
+        "name": "American Samoa",
+        "latitude": "-14.27097200",
+        "longitude": "-170.13221700",
+        "cities": []
+      },
+      {
         "name": "Arizona",
         "latitude": "34.04892810",
         "longitude": "-111.09373110",
@@ -4971,6 +4977,12 @@
             "longitude": "-92.68489000"
           }
         ]
+      },
+      {
+        "name": "Baker Island",
+        "latitude": "0.19362660",
+        "longitude": "-176.47690800",
+        "cities": []
       },
       {
         "name": "California",
@@ -20237,6 +20249,12 @@
         ]
       },
       {
+        "name": "Guam",
+        "latitude": "13.44430400",
+        "longitude": "144.79373100",
+        "cities": []
+      },
+      {
         "name": "Hawaii",
         "latitude": "19.89676620",
         "longitude": "-155.58278180",
@@ -20847,6 +20865,12 @@
             "longitude": "-158.02464000"
           }
         ]
+      },
+      {
+        "name": "Howland Island",
+        "latitude": "0.81132190",
+        "longitude": "-176.61827360",
+        "cities": []
       },
       {
         "name": "Idaho",
@@ -29947,6 +29971,18 @@
         ]
       },
       {
+        "name": "Jarvis Island",
+        "latitude": "-0.37435030",
+        "longitude": "-159.99672060",
+        "cities": []
+      },
+      {
+        "name": "Johnston Atoll",
+        "latitude": "16.72950350",
+        "longitude": "-169.53364770",
+        "cities": []
+      },
+      {
         "name": "Kansas",
         "latitude": "39.01190200",
         "longitude": "-98.48424650",
@@ -33494,6 +33530,12 @@
             "longitude": "-82.77794000"
           }
         ]
+      },
+      {
+        "name": "Kingman Reef",
+        "latitude": "6.38333300",
+        "longitude": "-162.41666700",
+        "cities": []
       },
       {
         "name": "Louisiana",
@@ -43081,6 +43123,12 @@
         ]
       },
       {
+        "name": "Midway Atoll",
+        "latitude": "28.20721680",
+        "longitude": "-177.37349260",
+        "cities": []
+      },
+      {
         "name": "Minnesota",
         "latitude": "46.72955300",
         "longitude": "-94.68589980",
@@ -50237,6 +50285,12 @@
             "longitude": "-108.27435000"
           }
         ]
+      },
+      {
+        "name": "Navassa Island",
+        "latitude": "18.41006890",
+        "longitude": "-75.01146120",
+        "cities": []
       },
       {
         "name": "Nebraska",
@@ -65185,6 +65239,12 @@
         ]
       },
       {
+        "name": "Northern Mariana Islands",
+        "latitude": "15.09790000",
+        "longitude": "145.67390000",
+        "cities": []
+      },
+      {
         "name": "Ohio",
         "latitude": "40.41728710",
         "longitude": "-82.90712300",
@@ -71859,6 +71919,12 @@
             "longitude": "-123.28342000"
           }
         ]
+      },
+      {
+        "name": "Palmyra Atoll",
+        "latitude": "5.88850260",
+        "longitude": "-162.07866560",
+        "cities": []
       },
       {
         "name": "Pennsylvania",
@@ -89295,6 +89361,18 @@
         ]
       },
       {
+        "name": "United States Minor Outlying Islands",
+        "latitude": "19.28231920",
+        "longitude": "166.64704700",
+        "cities": []
+      },
+      {
+        "name": "United States Virgin Islands",
+        "latitude": "18.33576500",
+        "longitude": "-64.89633500",
+        "cities": []
+      },
+      {
         "name": "Utah",
         "latitude": "39.32098010",
         "longitude": "-111.09373110",
@@ -93344,6 +93422,12 @@
             "longitude": "-76.50967000"
           }
         ]
+      },
+      {
+        "name": "Wake Island",
+        "latitude": "19.27961900",
+        "longitude": "166.64993480",
+        "cities": []
       },
       {
         "name": "Washington",
