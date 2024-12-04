@@ -11,28 +11,48 @@ import {
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { registerUser } from "../apis";
+import BookingSnackbar from "./BookingSnackBar";
 
 export default function Register() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
       await registerUser(name, email, password);
-      alert("Registration successful!");
-      navigate("/login");
+      setSnackbarMessage(
+        "Registration successful!, Hold on while we redirect you."
+      );
+      setSnackbarOpen(true);
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
     } catch (error) {
       console.error(error);
       if (error instanceof Error) {
-        alert(error.message);
+        setSnackbarMessage("Registration failed. Please try again.");
+        setSnackbarOpen(true);
       } else {
-        alert("An error occurred. Please try again later.");
+        setSnackbarMessage("Registration failed. Please try again.");
+        setSnackbarOpen(true);
       }
     }
+  };
+
+  const handleSnackbarClose = (
+    _?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
   };
 
   return (
@@ -138,6 +158,11 @@ export default function Register() {
           </Box>
         </Box>
       </Grid>
+      <BookingSnackbar
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+      />
     </Grid>
   );
 }

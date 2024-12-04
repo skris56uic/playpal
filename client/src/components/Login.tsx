@@ -13,11 +13,14 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../components/UserContext";
 
 import { loginUser } from "../apis";
+import BookingSnackbar from "./BookingSnackBar";
 
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const { setUser } = useContext(UserContext);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -26,16 +29,31 @@ export default function Login() {
     try {
       const userDetails = await loginUser(email, password);
       setUser(userDetails);
-      alert("Login successful!");
-      navigate("/");
+      setSnackbarMessage("Login successful!. Hold on while we redirect you.");
+      setSnackbarOpen(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (error) {
       console.error(error);
       if (error instanceof Error) {
-        alert(error.message);
+        setSnackbarMessage("Login failed. Please try again.");
+        setSnackbarOpen(true);
       } else {
-        alert("An error occurred. Please try again later.");
+        setSnackbarMessage("Login failed. Please try again.");
+        setSnackbarOpen(true);
       }
     }
+  };
+
+  const handleSnackbarClose = (
+    _?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
   };
 
   return (
@@ -120,6 +138,11 @@ export default function Login() {
             </Typography>
           </Box>
         </Box>
+        <BookingSnackbar
+          open={snackbarOpen}
+          onClose={handleSnackbarClose}
+          message={snackbarMessage}
+        />
       </Grid>
     </Grid>
   );

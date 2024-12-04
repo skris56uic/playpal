@@ -1,6 +1,7 @@
 import express, { Express } from "express";
 import mongoose from "mongoose";
-import router from "./routes/get";
+import { router as getRouter } from "./routes/get";
+import { router as postRouter } from "./routes/post";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -36,4 +37,5 @@ mongoose
     console.log("[server]: Error connecting to the database", error);
   });
 
-app.use(router);
+app.use(postRouter);
+app.use(getRouter);
