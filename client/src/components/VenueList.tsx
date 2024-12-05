@@ -5,6 +5,7 @@ import {
   Country,
   State,
   City,
+  SportType,
 } from "../apis/interfaces";
 import { getVenueList } from "../apis";
 import ActionAreaCard from "./Card";
@@ -18,6 +19,7 @@ import {
   SelectChangeEvent,
   Typography,
   Box,
+  Button,
 } from "@mui/material";
 import Spinner from "./Spinner";
 import countriesJSON from "../countries_data/united_states.json";
@@ -38,6 +40,7 @@ export function VenueList() {
   const [selectedCity, setSelectedCity] = useState("");
   const [states, setStates] = useState<State[]>([]);
   const [cities, setCities] = useState<City[]>([]);
+  const [selectedSports, setSelectedSports] = useState<SportType[]>([]);
   const { user } = useContext(UserContext);
 
   const handleCountryChange = (
@@ -75,6 +78,14 @@ export function VenueList() {
     }
   };
 
+  const handleSportToggle = (sport: SportType) => {
+    setSelectedSports((prevSelectedSports) =>
+      prevSelectedSports.includes(sport)
+        ? prevSelectedSports.filter((s) => s !== sport)
+        : [...prevSelectedSports, sport]
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       if (location.latitude !== 0 && location.longitude !== 0) {
@@ -97,6 +108,18 @@ export function VenueList() {
       navigate("/login");
     }
   }, [user, navigate]);
+
+  const filteredVenues = selectedSports.length
+    ? venueList.filter((venue) =>
+        venue.sports.some((sport) => selectedSports.includes(sport.type))
+      )
+    : venueList;
+
+  const allSports = Array.from(
+    new Set(
+      venueList.flatMap((venue) => venue.sports.map((sport) => sport.type))
+    )
+  );
 
   return (
     <Box sx={{ m: 5, mt: 8 }}>
@@ -159,6 +182,26 @@ export function VenueList() {
             </Select>
           </FormControl>
         </Stack>
+        {!loading && allSports.length > 1 && (
+          <Stack
+            direction="row"
+            spacing={1}
+            justifyContent="center"
+            sx={{ mt: 2 }}
+          >
+            {allSports.map((sport) => (
+              <Button
+                key={sport}
+                variant={
+                  selectedSports.includes(sport) ? "contained" : "outlined"
+                }
+                onClick={() => handleSportToggle(sport)}
+              >
+                {sport.charAt(0).toUpperCase() + sport.slice(1)}
+              </Button>
+            ))}
+          </Stack>
+        )}
         {loading && selectedCity ? (
           <Spinner message="Loading venues... Time to stretch your legs or do a little dance!" />
         ) : selectedCity && venueList.length === 0 ? (

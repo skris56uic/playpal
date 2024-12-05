@@ -20,6 +20,9 @@ router.get("/venues", async (req, res) => {
     return;
   }
 
+  console.log("userLatitude", userLatitude);
+  console.log("userLongitude", userLongitude);
+
   const cookie = req.cookies;
   const token = cookie.token;
   if (!token) {
