@@ -320,4 +320,8 @@ router.get("/book-slot", async (req, res) => {
     res.status(500).send("Error booking timeslot");
   }
 });
+
+router.get("/keep-alive", (req, res) => {
+  res.status(200).send({ message: "Server is alive" });
+});
 export { router };
