@@ -8,7 +8,10 @@ export async function getVenueList(
   location: LocationDetails
 ): Promise<Venue[]> {
   const url = `${baseUrl}/venues?latitude=${location.latitude}&longitude=${location.longitude}`;
-  const request: Request = new Request(url);
+  const request: Request = new Request(url, {
+    method: "GET",
+    credentials: "include",
+  });
   try {
     const response = await fetch(request);
     const data: PlaceLocation = await response.json();
@@ -24,7 +27,10 @@ export async function getVenueList(
 
 export async function getVenueDetails(id: string): Promise<Venue> {
   const url = `${baseUrl}/venue/${id}`;
-  const request: Request = new Request(url);
+  const request: Request = new Request(url, {
+    method: "GET",
+    credentials: "include",
+  });
   try {
     const response = await fetch(request);
     const data: Venue = await response.json();

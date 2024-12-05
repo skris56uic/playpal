@@ -4,13 +4,16 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
 import { useNavigate } from "react-router-dom";
+import { Sport } from "../apis/interfaces";
+import { capitalizeFirstLetter } from "../utils/getSportsName";
 
 export interface ActionAreaCardProps {
   id: string;
   name: string;
   location: string;
   amenities: string;
-  price: number;
+  sports: Sport[];
+  price: string;
 }
 
 export default function ActionAreaCard({
@@ -18,6 +21,7 @@ export default function ActionAreaCard({
   name,
   location,
   amenities,
+  sports,
   price,
 }: ActionAreaCardProps) {
   const navigate = useNavigate();
@@ -43,9 +47,14 @@ export default function ActionAreaCard({
 
           <Typography variant="body1" sx={{ color: "text.secondary" }}>
             Address: {location} <br />
+            Sports Available:{" "}
+            {sports
+              .map((sport) => capitalizeFirstLetter(sport.type))
+              .join(", ")}
+            <br />
             Amenities {amenities}
             <br />
-            Price: {price}
+            Average Price: {price}
             <br />
           </Typography>
         </CardContent>

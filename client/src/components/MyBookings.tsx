@@ -105,39 +105,44 @@ const MyBookings: React.FC = () => {
               Location: {venue.location}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Facilities: {venue.facilities}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
               Amenities: {venue.amenities.join(", ")}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Booked Slots:
             </Typography>
-            {venue.availableSlots.map((slot) =>
-              slot.timeSlots.map((timeSlot) => (
-                <Box
-                  key={timeSlot.id}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    mt: 1,
-                  }}
-                >
-                  <Typography variant="body2" color="text.secondary">
-                    {new Date(slot.date).toDateString()} - {timeSlot.startTime}{" "}
-                    to {timeSlot.endTime}
-                  </Typography>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    size="small"
-                    onClick={() => handleCancelBooking(timeSlot.id)}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-              ))
+            {venue.sports.map((sport) =>
+              sport.availableSlots.map((slot) =>
+                slot.timeSlots.map((timeSlot) =>
+                  timeSlot.playersJoined.includes(user?._id || "") ? (
+                    <Box
+                      key={timeSlot.id}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mt: 1,
+                      }}
+                    >
+                      <Typography variant="body2" color="text.secondary">
+                        Sport:{" "}
+                        {sport.type.charAt(0).toUpperCase() +
+                          sport.type.slice(1)}{" "}
+                        <br />
+                        Date: {new Date(slot.date).toDateString()} <br />
+                        Time: {timeSlot.startTime} to {timeSlot.endTime}
+                      </Typography>
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        size="small"
+                        onClick={() => handleCancelBooking(timeSlot.id)}
+                      >
+                        Cancel
+                      </Button>
+                    </Box>
+                  ) : null
+                )
+              )
             )}
           </Box>
         ))

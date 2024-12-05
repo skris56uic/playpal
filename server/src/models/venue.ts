@@ -6,6 +6,8 @@ interface TimeSlot {
   endTime: string;
   price: number;
   isBooked: boolean;
+  totalPlayers: number;
+  playersJoined: string[];
 }
 
 interface AvailableSlots {
@@ -18,13 +20,19 @@ interface ContactInformation {
   phoneNumber: string;
 }
 
+type SportType = "soccer" | "football" | "cricket" | "badminton";
+
+interface Sport {
+  type: SportType;
+  availableSlots: AvailableSlots[];
+}
+
 interface Venue {
   id: string;
   name: string;
   location: string;
-  facilities: string;
   amenities: string[];
-  availableSlots: AvailableSlots[];
+  sports: Sport[];
   contactInfo: ContactInformation;
 }
 
@@ -40,6 +48,8 @@ const timeSlotSchema = new mongoose.Schema<TimeSlot>({
   endTime: { type: String, required: true },
   price: { type: Number, required: true },
   isBooked: { type: Boolean, required: true, default: false },
+  totalPlayers: { type: Number, required: true },
+  playersJoined: { type: [String], required: true },
 });
 
 const availableSlotsSchema = new mongoose.Schema<AvailableSlots>({
@@ -52,13 +62,17 @@ const contactInformationSchema = new mongoose.Schema<ContactInformation>({
   phoneNumber: { type: String, required: true },
 });
 
+const sportSchema = new mongoose.Schema<Sport>({
+  type: { type: String, required: true },
+  availableSlots: { type: [availableSlotsSchema], required: true },
+});
+
 const venueSchema = new mongoose.Schema<Venue>({
   id: { type: String, required: true },
   name: { type: String, required: true },
   location: { type: String, required: true },
-  facilities: { type: String, required: true },
   amenities: { type: [String], required: true },
-  availableSlots: { type: [availableSlotsSchema], required: true },
+  sports: { type: [sportSchema], required: true },
   contactInfo: { type: contactInformationSchema, required: true },
 });
 
@@ -78,6 +92,9 @@ export {
   Venue,
   TimeSlot,
   AvailableSlots,
+  Sport,
+  SportType,
+  sportSchema,
   placeLocationSchema,
   PlaceLocation,
   ContactInformation,

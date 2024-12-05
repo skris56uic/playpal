@@ -4,6 +4,8 @@ export interface TimeSlot {
   endTime: string;
   price: number;
   isBooked: boolean;
+  totalPlayers: number;
+  playersJoined: string[];
 }
 
 export interface AvailableSlots {
@@ -22,14 +24,20 @@ interface ContactInformation {
   phoneNumber: string;
 }
 
+export type SportType = "soccer" | "football" | "cricket" | "badminton";
+
+export interface Sport {
+  type: SportType;
+  availableSlots: AvailableSlots[];
+}
+
 export interface Venue {
   id: string;
   name: string;
   location: string;
-  facilities: string;
   amenities: string[];
-  availableSlots: AvailableSlots[];
   contactInfo: ContactInformation;
+  sports: Sport[];
 }
 
 export interface LocationDetails {

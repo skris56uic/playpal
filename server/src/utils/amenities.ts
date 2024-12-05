@@ -13,12 +13,6 @@ const possibleAmenities: string[] = [
   "Sauna",
   "Steam Room",
   "Bicycle Parking",
-  "Sports Equipment Rental",
-  "Tennis Courts",
-  "Basketball Courts",
-  "Soccer Field",
-  "Baseball Field",
-  "Volleyball Courts",
 ];
 
 export const getRandomAmenities = (): string[] => {

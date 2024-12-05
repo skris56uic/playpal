@@ -23,6 +23,7 @@ import Spinner from "./Spinner";
 import countriesJSON from "../countries_data/united_states.json";
 import { UserContext } from "../components/UserContext";
 import { useNavigate } from "react-router-dom";
+import { calculateAveragePrice } from "../utils/getAveragePrice";
 
 export function VenueList() {
   const navigate = useNavigate();
@@ -180,7 +181,8 @@ export function VenueList() {
               name={x.name}
               location={x.location}
               amenities={x.amenities.join(", ")}
-              price={x.availableSlots[0].timeSlots[0].price}
+              sports={x.sports}
+              price={calculateAveragePrice(x)}
             />
           ))
         )}

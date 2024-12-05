@@ -1,8 +1,10 @@
+import { SportType } from "../models/venue";
+
 export interface LocationAPIResponse {
   version: number;
   generator: string;
   osm3s: Osm3s;
-  elements?: ElementsEntity[] | null;
+  elements: ElementsEntity[];
 }
 
 export interface Osm3s {
@@ -13,55 +15,43 @@ export interface Osm3s {
 export interface ElementsEntity {
   type: string;
   id: number;
-  bounds?: Bounds | null;
-  nodes?: number[] | null;
-  geometry?: GeometryEntity[] | null;
+  lat?: number;
+  lon?: number;
   tags: Tags;
-  members?: MembersEntity[] | null;
+  center?: Center;
 }
 
-export interface Bounds {
-  minlat: number;
-  minlon: number;
-  maxlat: number;
-  maxlon: number;
-}
-
-export interface GeometryEntity {
+export interface Center {
   lat: number;
   lon: number;
 }
 
 export interface Tags {
-  "addr:city"?: string | null;
-  "addr:housenumber"?: string | null;
-  "addr:postcode"?: string | null;
-  "addr:state"?: string | null;
-  "addr:street"?: string | null;
-  "addr:street:name"?: string | null;
-  "addr:street:prefix"?: string | null;
-  "addr:street:type"?: string | null;
-  building?: string | null;
-  "building:levels"?: string | null;
-  "chicago:building_id"?: string | null;
+  "addr:city": string;
+  "addr:housenumber": string;
+  "addr:postcode": string;
+  "addr:state": string;
+  "addr:street": string;
   leisure: string;
-  name?: string | null;
-  operator?: string | null;
-  "operator:type"?: string | null;
-  ref?: string | null;
-  start_date?: string | null;
-  sport?: string | null;
-  surface?: string | null;
-  barrier?: string | null;
-  source?: string | null;
-  type?: string | null;
+  name: string;
+  opening_hours?: string;
+  phone?: string;
+  sport: string;
+  website?: string;
+  lit?: string;
+  building?: string;
+  alt_name?: string;
+  landuse?: string;
 }
 
-export interface MembersEntity {
-  type: string;
-  ref: number;
-  role: string;
-  geometry?: GeometryEntity[] | null;
+export interface VenueAvailableTimeSlots {
+  date: string;
+  timeSlots: VenueAvailableSlots[];
+}
+
+export interface SportDetails {
+  type: SportType;
+  availableSlots: VenueAvailableTimeSlots[];
 }
 
 export interface VenueDetails {
@@ -72,18 +62,17 @@ export interface VenueDetails {
   address_postcode: string;
   address_state: string;
   address_street: string;
-  availableSlots: VenueAvailableSlots[];
+  sports: SportDetails[];
 }
 
 export interface VenueAvailableSlots {
-  id: number;
+  id: string;
   startTime: string;
   endTime: string;
-}
-
-export interface LocationDetails {
-  latitude: number;
-  longitude: number;
+  price: number;
+  isBooked: boolean;
+  totalPlayers: number;
+  playersJoined: string[];
 }
 
 export interface RegisterRequest {

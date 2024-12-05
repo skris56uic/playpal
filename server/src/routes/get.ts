@@ -3,10 +3,10 @@ import jwt from "jsonwebtoken";
 import { LocationAPIResponse, VenueDetails } from "./interfaces";
 import { PlaceLocation, PlaceLocationModel, Venue } from "../models/venue";
 import { userModel } from "../models/user";
-import { generateTimeSlots } from "../utils/getTimeSlots";
 import { getRandomAmenities } from "../utils/amenities";
 import { getRandomContactInformation } from "../utils/contactInfo";
 import { jwtSecret } from "../utils/constants";
+import { formatSportInfo } from "../utils/formatSportInfo";
 
 const router: Router = express.Router();
 
@@ -17,6 +17,23 @@ router.get("/venues", async (req, res) => {
 
   if (userLatitude === 0 || userLongitude === 0) {
     res.status(400).send("Missing required parameters");
+    return;
+  }
+
+  const cookie = req.cookies;
+  const token = cookie.token;
+  if (!token) {
+    res.status(401).send({ error: "Unauthorized" });
+    return;
+  }
+
+  const decoded = jwt.verify(token, jwtSecret);
+  const userId = (decoded as jwt.JwtPayload).id;
+
+  const user = await userModel.findById(userId);
+
+  if (!user) {
+    res.status(401).send({ error: "Unauthorized" });
     return;
   }
 
@@ -35,7 +52,7 @@ router.get("/venues", async (req, res) => {
 
   const overpassQuery = `
     [out:json][timeout:180];
-    nwr(around:100000,${userLatitude},${userLongitude})["sport"~".*\\s*base\\s*ball\\s*.*",i]["name"]["addr:city"]["addr:housenumber"]["addr:postcode"]["addr:state"]["addr:street"];
+    nwr(around:100000,${userLatitude},${userLongitude})["sport"~"soccer|football|cricket|badminton",i]["name"]["addr:city"]["addr:housenumber"]["addr:postcode"]["addr:state"]["addr:street"];
     out center tags;`;
 
   try {
@@ -45,6 +62,8 @@ router.get("/venues", async (req, res) => {
       method: "POST",
       body: overpassQuery,
     });
+
+    console.log("overpassQuery", overpassQuery);
 
     const response = await fetch(request);
     const data: LocationAPIResponse = await response.json();
@@ -59,7 +78,7 @@ router.get("/venues", async (req, res) => {
             address_postcode: e.tags["addr:postcode"] || "",
             address_state: e.tags["addr:state"] || "",
             address_street: e.tags["addr:street"] || "",
-            availableSlots: [],
+            sports: formatSportInfo(e.tags.sport),
           };
         })
         .filter(
@@ -69,7 +88,8 @@ router.get("/venues", async (req, res) => {
             !!x.address_housenumber &&
             !!x.address_postcode &&
             !!x.address_state &&
-            !!x.address_street
+            !!x.address_street &&
+            x.sports.length > 0
         ) || [];
 
     const uniqueVenues = new Set<string>();
@@ -90,9 +110,8 @@ router.get("/venues", async (req, res) => {
           name: x.name,
           location: `${x.address_housenumber} ${x.address_street}, ${x.address_city}, ${x.address_state}, ${x.address_postcode}`,
           amenities: getRandomAmenities(),
-          facilities: "Baseball",
-          availableSlots: generateTimeSlots(),
           contactInfo: getRandomContactInformation(),
+          sports: x.sports,
         })),
     };
 
@@ -111,6 +130,23 @@ router.get("/venue/:id", async (req, res) => {
   const venueId = req.params.id;
 
   try {
+    const cookie = req.cookies;
+    const token = cookie.token;
+    if (!token) {
+      res.status(401).send({ error: "Unauthorized" });
+      return;
+    }
+
+    const decoded = jwt.verify(token, jwtSecret);
+    const userId = (decoded as jwt.JwtPayload).id;
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      res.status(401).send({ error: "Unauthorized" });
+      return;
+    }
+
     const placeLocation = await PlaceLocationModel.findOne({
       "venues.id": venueId,
     });
@@ -154,7 +190,6 @@ router.get("/my-bookings", async (req, res) => {
       return;
     }
 
-
     const placeLocations: PlaceLocation[] = await PlaceLocationModel.find();
 
     if (!placeLocations || placeLocations.length === 0) {
@@ -165,19 +200,25 @@ router.get("/my-bookings", async (req, res) => {
     const filteredVenues: Venue[] = [];
     placeLocations.forEach((placeLocation) => {
       placeLocation.venues.forEach((venue) => {
-        venue.availableSlots.forEach((slot, i) => {
-          venue.availableSlots[i].timeSlots = slot.timeSlots.filter(
-            (ts) => ts.isBooked && user.bookedSlots.includes(ts.id)
+        venue.sports.forEach((sport) => {
+          sport.availableSlots.forEach((slot, i) => {
+            sport.availableSlots[i].timeSlots = slot.timeSlots.filter(
+              (ts) => ts.isBooked && user.bookedSlots.includes(ts.id)
+            );
+          });
+
+          sport.availableSlots = sport.availableSlots.filter(
+            (as) => as.timeSlots.length > 0
           );
         });
 
-        venue.availableSlots = venue.availableSlots.filter(
-          (as) => as.timeSlots.length > 0
+        venue.sports = venue.sports.filter(
+          (sport) => sport.availableSlots.length > 0
         );
       });
 
       filteredVenues.push(
-        ...placeLocation.venues.filter((v) => v.availableSlots.length > 0)
+        ...placeLocation.venues.filter((v) => v.sports.length > 0)
       );
     });
 
@@ -216,22 +257,41 @@ router.get("/book-slot", async (req, res) => {
     }
 
     const placeLocation = await PlaceLocationModel.findOne({
-      "venues.availableSlots.timeSlots.id": slotId,
+      "venues.sports.availableSlots.timeSlots.id": slotId,
     });
 
     if (!placeLocation) {
-      res.status(404).send("Timeslot not found");
+      res.status(404).send("Timeslot not found in DB");
       return;
     }
 
     let slotFound = false;
     placeLocation.venues.forEach((venue) => {
-      venue.availableSlots.forEach((availableSlot) => {
-        availableSlot.timeSlots.forEach((timeSlot) => {
-          if (timeSlot.id === slotId) {
-            timeSlot.isBooked = book === "true";
-            slotFound = true;
-          }
+      venue.sports.forEach((sport) => {
+        sport.availableSlots.forEach((availableSlot) => {
+          availableSlot.timeSlots.forEach((timeSlot) => {
+            if (timeSlot.id === slotId) {
+              if (book === "true") {
+                if (timeSlot.playersJoined.length >= timeSlot.totalPlayers) {
+                  res.status(400).send({ error: "Slot is already full" });
+                  return;
+                }
+                if (timeSlot.playersJoined.includes(userId)) {
+                  res
+                    .status(400)
+                    .send({ error: "User has already joined this slot" });
+                  return;
+                }
+                timeSlot.playersJoined.push(userId);
+              } else {
+                timeSlot.playersJoined = timeSlot.playersJoined.filter(
+                  (playerId) => playerId !== userId
+                );
+              }
+              timeSlot.isBooked = timeSlot.playersJoined.length > 0;
+              slotFound = true;
+            }
+          });
         });
       });
     });
