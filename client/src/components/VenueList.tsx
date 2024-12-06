@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import Spinner from "./Spinner";
 import countriesJSON from "../countries_data/united_states.json";
-import { UserContext } from "../components/UserContext";
+import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import { calculateAveragePrice } from "../utils/getAveragePrice";
 
@@ -217,17 +217,26 @@ export function VenueList() {
             </Typography>
           </Box>
         ) : (
-          filteredVenues.map((x, i) => (
-            <ActionAreaCard
-              key={i}
-              id={x.id}
-              name={x.name}
-              location={x.location}
-              amenities={x.amenities.join(", ")}
-              sports={x.sports}
-              price={calculateAveragePrice(x)}
-            />
-          ))
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 2,
+              justifyContent: "space-between",
+            }}
+          >
+            {venueList.map((x, i) => (
+              <ActionAreaCard
+                key={i}
+                id={x.id}
+                name={x.name}
+                location={x.location}
+                amenities={x.amenities.join(", ")}
+                sports={x.sports}
+                price={calculateAveragePrice(x)}
+              />
+            ))}
+          </Box>
         )}
         <Divider />
       </Stack>

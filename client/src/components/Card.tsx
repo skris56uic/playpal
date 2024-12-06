@@ -32,13 +32,16 @@ export default function ActionAreaCard({
   };
 
   return (
-    <Card sx={{ maxWidth: 2000 }} onClick={handleClick}>
+    <Card
+      sx={{ width: "calc(33.33% - 16px)", marginBottom: 2 }}
+      onClick={handleClick}
+    >
       <CardActionArea>
         <CardMedia
           component="img"
           height="140"
-          image="/picture.jpg"
-          alt="green iguana"
+          image={`/${sports[0].type}.webp`}
+          alt={`/${sports[0].type}.webp`}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
@@ -47,15 +50,17 @@ export default function ActionAreaCard({
 
           <Typography variant="body1" sx={{ color: "text.secondary" }}>
             Address: {location} <br />
+            <br />
             Sports Available:{" "}
             {sports
               .map((sport) => capitalizeFirstLetter(sport.type))
               .join(", ")}
             <br />
+            <br />
             Amenities {amenities}
             <br />
-            Average Price: {price}
             <br />
+            Average Price: {price}
           </Typography>
         </CardContent>
       </CardActionArea>

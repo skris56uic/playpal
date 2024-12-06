@@ -50,7 +50,7 @@ const Header: React.FC = () => {
             sx={{
               flexGrow: 1,
               fontFamily: "'Coiny', cursive",
-              fontWeight: 700,
+              fontWeight: 500,
             }}
           >
             Play Pal
