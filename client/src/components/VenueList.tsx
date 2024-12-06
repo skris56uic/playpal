@@ -122,7 +122,7 @@ export function VenueList() {
   );
 
   return (
-    <Box sx={{ m: 5, mt: 8 }}>
+    <Box sx={{ m: 5, mt: 13 }}>
       <Stack spacing={2}>
         <Typography variant="h6" align="center">
           Select Country, State and City to Search for Venues
@@ -222,10 +222,9 @@ export function VenueList() {
               display: "flex",
               flexWrap: "wrap",
               gap: 2,
-              justifyContent: "space-between",
             }}
           >
-            {venueList.map((x, i) => (
+            {filteredVenues.map((x, i) => (
               <ActionAreaCard
                 key={i}
                 id={x.id}

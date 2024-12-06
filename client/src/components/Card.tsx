@@ -31,6 +31,20 @@ export default function ActionAreaCard({
     navigate(`/venue/${id}`);
   };
 
+  console.log();
+
+  const getSportImage = (sports: Sport[]) => {
+    const prioritySports = ["badminton", "cricket", "football", "soccer"];
+    for (const sport of prioritySports) {
+      if (sports.some((s) => s.type === sport)) {
+        return `/${sport}.webp`;
+      }
+    }
+    return "/default.webp";
+  };
+
+  const sportImage = getSportImage(sports);
+
   return (
     <Card
       sx={{ width: "calc(33.33% - 16px)", marginBottom: 2 }}
@@ -40,8 +54,8 @@ export default function ActionAreaCard({
         <CardMedia
           component="img"
           height="140"
-          image={`/${sports[0].type}.webp`}
-          alt={`/${sports[0].type}.webp`}
+          image={sportImage}
+          alt={`/${sports[0].type} image`}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">

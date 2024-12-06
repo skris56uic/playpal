@@ -72,13 +72,11 @@ const MyBookings: React.FC = () => {
   return (
     <Box
       sx={{
-        mt: 8,
+        mt: 13,
         display: "flex",
         flexDirection: "column",
         gap: 2,
-        p: 2,
-        alignItems: "center",
-        justifyContent: "center",
+        p: 0,
       }}
     >
       {bookedVenues.length === 0 ? (
@@ -86,66 +84,79 @@ const MyBookings: React.FC = () => {
           No Booking Present, kindly make a booking to be viewed here.
         </Typography>
       ) : (
-        bookedVenues.map((venue) => (
-          <Box
-            key={venue.id}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "16px",
-              backgroundColor: "#f9f9f9",
-            }}
-          >
-            <Typography variant="h5" component="div">
-              {venue.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Location: {venue.location}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Amenities: {venue.amenities.join(", ")}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Booked Slots:
-            </Typography>
-            {venue.sports.map((sport) =>
-              sport.availableSlots.map((slot) =>
-                slot.timeSlots.map((timeSlot) =>
-                  timeSlot.playersJoined.includes(user?._id || "") ? (
-                    <Box
-                      key={timeSlot.id}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        mt: 1,
-                      }}
-                    >
-                      <Typography variant="body2" color="text.secondary">
-                        Sport:{" "}
-                        {sport.type.charAt(0).toUpperCase() +
-                          sport.type.slice(1)}{" "}
-                        <br />
-                        Date: {new Date(slot.date).toDateString()} <br />
-                        Time: {timeSlot.startTime} to {timeSlot.endTime}
-                      </Typography>
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        size="small"
-                        onClick={() => handleCancelBooking(timeSlot.id)}
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "16px",
+            padding: "16px",
+          }}
+        >
+          {bookedVenues.map((venue) => (
+            <Box
+              key={venue.id}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                width: "calc(33.33% - 16px)",
+                border: "1px solid #ccc",
+                borderRadius: "8px",
+                padding: "16px",
+                backgroundColor: "#f9f9f9",
+                boxSizing: "border-box",
+                gap: "8px",
+              }}
+            >
+              <Typography variant="h5" component="div">
+                {venue.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Location: {venue.location}
+                <br />
+                <br />
+                Amenities: {venue.amenities.join(", ")}
+                <br />
+                <br />
+                Booked Slots:
+              </Typography>
+              {venue.sports.map((sport) =>
+                sport.availableSlots.map((slot) =>
+                  slot.timeSlots.map((timeSlot) =>
+                    timeSlot.playersJoined.includes(user?._id || "") ? (
+                      <Box
+                        key={timeSlot.id}
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          border: "1px solid #ccc",
+                          padding: "16px",
+                        }}
                       >
-                        Cancel
-                      </Button>
-                    </Box>
-                  ) : null
+                        <Typography variant="body2" color="text.secondary">
+                          Sport:{" "}
+                          {sport.type.charAt(0).toUpperCase() +
+                            sport.type.slice(1)}{" "}
+                          <br />
+                          Date: {new Date(slot.date).toDateString()}
+                          <br />
+                          Time: {timeSlot.startTime} to {timeSlot.endTime}
+                        </Typography>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleCancelBooking(timeSlot.id)}
+                        >
+                          Cancel
+                        </Button>
+                      </Box>
+                    ) : null
+                  )
                 )
-              )
-            )}
-          </Box>
-        ))
+              )}
+            </Box>
+          ))}
+        </Box>
       )}
       <BookingSnackbar
         open={snackbarOpen}
