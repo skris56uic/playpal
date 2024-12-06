@@ -1,6 +1,6 @@
 # Playpal - Find, Book, and Play!
 
-Playpal is a user-friendly platform designed to help sports enthusiasts easily discover and book recreational spaces. Currently focused on baseball fields across Illinois, Playpal leverages open-source geolocation data to make finding and reserving a playing field seamless.
+Playpal is a user-friendly platform designed to help sports enthusiasts easily discover and book recreational spaces.Playpal leverages open-source geolocation data to make finding and reserving a playing field seamless.
 
 🌐 **[Try Playpal Now!](https://playpal-ydmy.onrender.com/login)**
 
