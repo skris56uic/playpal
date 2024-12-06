@@ -1,6 +1,6 @@
 # Playpal - Find, Book, and Play!
 
-Playpal is a user-friendly platform designed to help sports enthusiasts easily discover and book recreational spaces.Playpal leverages open-source geolocation data to make finding and reserving a playing field seamless.
+Playpal is a user-friendly platform designed to help sports enthusiasts easily discover and book recreational spaces. Playpal leverages open-source geolocation data to make finding and reserving a playing field seamless.
 
 🌐 **[Try Playpal Now!](https://playpal-ydmy.onrender.com/login)**
 
@@ -9,7 +9,7 @@ Playpal is a user-friendly platform designed to help sports enthusiasts easily d
 ## Key Features
 
 - **Discover and Book Soccer, Badminton, Cricket and Football Fields**  
-  Playpal uses the Overpass API (integrated with OpenStreetMap) to fetch real-time data on baseball fields in Illinois. Users can explore available fields and book timeslots directly through the app.
+  Playpal uses the Overpass API (integrated with OpenStreetMap) to fetch real-time data on different types of sport fields. Users can explore available fields and book timeslots directly through the app.
 
 - **List Venues with Detailed Information**
   - View all available venues and their locations, facilities, facts, and amenities.
