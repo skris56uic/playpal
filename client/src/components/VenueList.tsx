@@ -217,7 +217,7 @@ export function VenueList() {
             </Typography>
           </Box>
         ) : (
-          venueList.map((x, i) => (
+          filteredVenues.map((x, i) => (
             <ActionAreaCard
               key={i}
               id={x.id}
