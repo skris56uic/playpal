@@ -22,7 +22,7 @@ import {
   Button,
 } from "@mui/material";
 import Spinner from "./Spinner";
-import all from "../countries_data/all.json";
+import all from "../countries_data/all.json" assert { type: "json" };
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import { calculateAveragePrice } from "../utils/getAveragePrice";

@@ -6,6 +6,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 import { useNavigate } from "react-router-dom";
 import { Sport } from "../apis/interfaces";
 import { capitalizeFirstLetter } from "../utils/getSportsName";
+import { getSportImage } from "../utils/getSportImage";
 
 export interface ActionAreaCardProps {
   id: string;
@@ -29,18 +30,6 @@ export default function ActionAreaCard({
   const handleClick = () => {
     console.log("Card clicked", id);
     navigate(`/venue/${id}`);
-  };
-
-  console.log();
-
-  const getSportImage = (sports: Sport[]) => {
-    const prioritySports = ["badminton", "cricket", "football", "soccer"];
-    for (const sport of prioritySports) {
-      if (sports.some((s) => s.type === sport)) {
-        return `/${sport}.webp`;
-      }
-    }
-    return "/default.webp";
   };
 
   const sportImage = getSportImage(sports);

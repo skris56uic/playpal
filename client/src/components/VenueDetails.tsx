@@ -18,12 +18,13 @@ import {
   RadioGroup,
 } from "@mui/material";
 import { getVenueDetails, updateBooking } from "../apis";
-import { SportType, TimeSlot, Venue, Sport } from "../apis/interfaces";
+import { SportType, TimeSlot, Venue } from "../apis/interfaces";
 import BookingSnackbar from "./BookingSnackBar";
 import Spinner from "./Spinner";
 import { UserContext } from "./UserContext";
 import { calculateAveragePrice } from "../utils/getAveragePrice";
 import { capitalizeFirstLetter } from "../utils/getSportsName";
+import { getSportImage } from "../utils/getSportImage";
 
 const defaultSlot: TimeSlot = {
   id: "",
@@ -181,16 +182,6 @@ const VenueDetails: React.FC = () => {
   if (!venue) {
     return <div>Loading...</div>;
   }
-
-  const getSportImage = (sports: Sport[]) => {
-    const prioritySports = ["badminton", "cricket", "football", "soccer"];
-    for (const sport of prioritySports) {
-      if (sports.some((s) => s.type === sport)) {
-        return `/${sport}.webp`;
-      }
-    }
-    return "/default.webp";
-  };
 
   const sportImage = getSportImage(venue.sports);
 
