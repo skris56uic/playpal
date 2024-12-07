@@ -9,7 +9,7 @@ const app: Express = express();
 const port = process.env.PORT || 3000;
 const mongoUrl = "mongodb://localhost:27017/playpal";
 // const mongoUrl =
-//   "mongodb+srv://skris56:rhythpic%40123@rhythpic.0wk5z.mongodb.net/playpal?retryWrites=true&w=majority&appName=rhythpic";
+  // "mongodb+srv://skris56:rhythpic%40123@rhythpic.0wk5z.mongodb.net/playpal?retryWrites=true&w=majority&appName=rhythpic";
 
 app.use(express.json());
 app.use(cookieParser());

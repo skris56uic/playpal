@@ -46,7 +46,12 @@ router.post("/login", async (req, res) => {
             if (err) {
               throw err;
             }
-            res.cookie("token", token).json(userDoc);
+            res
+              .cookie("token", token, {
+                sameSite: "none",
+                secure: true,
+              })
+              .json(userDoc);
           }
         );
       } else {
