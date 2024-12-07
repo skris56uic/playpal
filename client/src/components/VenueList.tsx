@@ -123,6 +123,9 @@ export function VenueList() {
     )
   );
 
+  console.log("allSports", allSports);
+  console.log("selectedSports", selectedSports);
+
   return (
     <Box sx={{ m: 5, mt: 13 }}>
       <Stack spacing={2}>
@@ -184,24 +187,53 @@ export function VenueList() {
             </Select>
           </FormControl>
         </Stack>
-        {!loading && allSports.length > 1 && (
+        {!loading && (
           <Stack
             direction="row"
             spacing={1}
             justifyContent="center"
             sx={{ mt: 2 }}
           >
-            {allSports.map((sport) => (
-              <Button
-                key={sport}
-                variant={
-                  selectedSports.includes(sport) ? "contained" : "outlined"
-                }
-                onClick={() => handleSportToggle(sport)}
-              >
-                {sport.charAt(0).toUpperCase() + sport.slice(1)}
-              </Button>
-            ))}
+            <Button
+              key="Soccer"
+              variant={
+                selectedSports.includes("soccer") ? "contained" : "outlined"
+              }
+              onClick={() => handleSportToggle("soccer")}
+              disabled={!allSports.includes("soccer")}
+            >
+              Soccer
+            </Button>
+            <Button
+              key="Badminton"
+              variant={
+                selectedSports.includes("badminton") ? "contained" : "outlined"
+              }
+              onClick={() => handleSportToggle("badminton")}
+              disabled={!allSports.includes("badminton")}
+            >
+              Badminton
+            </Button>
+            <Button
+              key="Cricket"
+              variant={
+                selectedSports.includes("cricket") ? "contained" : "outlined"
+              }
+              onClick={() => handleSportToggle("cricket")}
+              disabled={!allSports.includes("cricket")}
+            >
+              Cricket
+            </Button>
+            <Button
+              key="Football"
+              variant={
+                selectedSports.includes("football") ? "contained" : "outlined"
+              }
+              onClick={() => handleSportToggle("football")}
+              disabled={!allSports.includes("football")}
+            >
+              Football
+            </Button>
           </Stack>
         )}
         {loading && selectedCity ? (
