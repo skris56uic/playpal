@@ -22,10 +22,12 @@ import {
   Button,
 } from "@mui/material";
 import Spinner from "./Spinner";
-import countriesJSON from "../countries_data/united_states.json";
+import all from "../countries_data/all.json";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import { calculateAveragePrice } from "../utils/getAveragePrice";
+
+const countries: Country[] = all as Country[];
 
 export function VenueList() {
   const navigate = useNavigate();
@@ -47,7 +49,7 @@ export function VenueList() {
     event: SelectChangeEvent<string>,
     _: ReactNode
   ) => {
-    const country = countriesJSON.find(
+    const country = countries.find(
       (c: Country) => c.name === event.target.value
     );
     setSelectedCountry(event.target.value as string);
@@ -136,7 +138,7 @@ export function VenueList() {
               label="Country"
               sx={{ backgroundColor: "white" }}
             >
-              {countriesJSON.map((country: Country) => (
+              {countries.map((country: Country) => (
                 <MenuItem key={country.name} value={country.name}>
                   {country.name}
                 </MenuItem>
