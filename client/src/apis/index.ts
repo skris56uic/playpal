@@ -1,7 +1,7 @@
 import { User } from "../components/UserContext";
 import { Venue, LocationDetails, PlaceLocation } from "./interfaces";
 
-// const baseUrl = "https://playpal-backend-0saw.onrender.com";
+// const baseUrl = "https://playpal-backend-dumd.onrender.com";
 const baseUrl = "http://localhost:3000";
 
 export async function getVenueList(
