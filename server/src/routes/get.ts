@@ -58,8 +58,6 @@ router.get("/venues", async (req, res) => {
     nwr(around:100000,${userLatitude},${userLongitude})["sport"~"soccer|football|cricket|badminton",i]["name"]["addr:city"]["addr:housenumber"]["addr:postcode"]["addr:state"]["addr:street"];
     out center tags;`;
 
-  console.log("overpassQuery", overpassQuery);
-
   try {
     // Send the query to the Overpass API
 
