@@ -30,6 +30,13 @@
 
 ---
 
+
+## 📷 Screenshots  
+
+![Playpal](Playpal.png)
+
+---
+
 ## How to Use
 
 1. **Register**  
